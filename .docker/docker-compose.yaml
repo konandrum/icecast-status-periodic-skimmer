@@ -16,6 +16,34 @@ services:
     environment:
       - APP_ENV=dev
       - APP_DEBUG=1
+    networks:
+      db: ~
+
+  postgres:
+    image: postgres:${POSTGRES_VERSION:-17}-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-isps}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-toor}
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:rw
+    networks:
+      db: ~
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - 8026:8080
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      db: ~
 
 configs:
   php_conf:
@@ -23,3 +51,7 @@ configs:
 
 volumes:
   composer: ~
+  postgres_data: ~
+
+networks:
+  db: ~

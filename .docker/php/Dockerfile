@@ -35,7 +35,7 @@ COPY composer.json composer.lock symfony.lock .env* ./
 #COPY assets assets/
 COPY bin bin/
 COPY config config/
-#COPY migrations migrations/
+COPY migrations migrations/
 COPY public public/
 COPY src src/
 #COPY templates templates/
