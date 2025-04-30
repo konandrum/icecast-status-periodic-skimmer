@@ -1,0 +1,8 @@
+app:
+    observed_icecast_sources:
+        rdwa_die:
+            host: live.aurafm.org
+            source_path: '/R-Dwa'
+        rdwa_luc:
+            host: live.aurafm.org
+            source_path: '/R-Dwa-LUC'
