@@ -9,6 +9,11 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class AppBundle extends AbstractBundle
 {
+    public function getPath(): string
+    {
+        return '';
+    }
+
     public function configure(DefinitionConfigurator $definition): void
     {
         $definition->rootNode()
@@ -18,8 +23,8 @@ class AppBundle extends AbstractBundle
                     ->useAttributeAsKey('name')
                     ->arrayPrototype()
                         ->children()
-                            ->scalarNode('host')->end()
                             ->scalarNode('scheme')->defaultValue('https')->end()
+                            ->scalarNode('host')->end()
                             ->scalarNode('status_path')->defaultValue('/status-json.xsl')->end()
                             ->scalarNode('source_path')->isRequired()->cannotBeEmpty()->end()
                         ->end()
@@ -31,6 +36,6 @@ class AppBundle extends AbstractBundle
 
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        dd($config);
+        $builder->setParameter('app.observed_icecast_sources', $config['observed_icecast_sources']);
     }
 }

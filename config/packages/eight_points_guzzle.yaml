@@ -4,7 +4,6 @@
 eight_points_guzzle:
     clients:
         icecast:
-            base_url: 'https://%env(resolve:ICECAST_HOST)%/'
             options:
                 timeout: 30
                 http_errors: true
