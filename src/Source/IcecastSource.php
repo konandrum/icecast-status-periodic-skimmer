@@ -98,6 +98,9 @@ class IcecastSource
         $response = $this->getHttpClient()->get($this->getUrl());
         $jsonContent = json_decode($response->getBody()->getContents(), true);
 
-        return AbstractAudioStreamItemFactory::createFromArray($jsonContent['icestats']['source'][$this->getSourcePath()]);
+        return AbstractAudioStreamItemFactory::createFromArray(array_merge(
+            ['source' => $this->getName()],
+            $jsonContent['icestats']['source'][$this->getSourcePath()]
+        ));
     }
 }

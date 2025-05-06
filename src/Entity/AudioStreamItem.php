@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-// use App\Repository\AudioStreamItemRepository;
+use App\Repository\AudioStreamItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
-// #[ORM\Entity(repositoryClass: AudioStreamItemRepository::class)]
-#[ORM\Entity()]
+#[ORM\Entity(repositoryClass: AudioStreamItemRepository::class)]
 class AudioStreamItem
 {
     #[ORM\Id]
@@ -16,6 +15,9 @@ class AudioStreamItem
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id;
+
+    #[ORM\Column(length: 64, nullable: false)]
+    private string $source;
 
     #[ORM\Column(length: 255, nullable: false)]
     private string $name;
@@ -32,6 +34,18 @@ class AudioStreamItem
     public function getId(): ?Uuid
     {
         return $this->id;
+    }
+
+    public function getSource(): string
+    {
+        return $this->source;
+    }
+
+    public function setSource(string $source): self
+    {
+        $this->source = $source;
+
+        return $this;
     }
 
     public function getName(): string

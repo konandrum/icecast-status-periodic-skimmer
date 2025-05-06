@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\AudioStreamItem;
 use App\Factory\IcecastConfiguredSourcesFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -28,15 +29,41 @@ class IcecastHarvestingCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach ($this->icecastConfiguredSourcesFactory->buildSources() as $icecastSource) {
-            dump($icecastSource->getAudioStreamItem());
+            $audioStreamItem = $icecastSource->getAudioStreamItem();
+
+            if ($this->storeAudioStreamItem($audioStreamItem)) {
+                $output->writeln(sprintf('<info>[%s | %s] add "%s"</info>',
+                    $audioStreamItem->getObservedAt()->format('Y-m-d H:i:s'),
+                    $audioStreamItem->getSource(),
+                    $audioStreamItem->getTitle()
+                ));
+            }
+
+            $output->writeln(sprintf('<comment>[%s | %s] no item added</comment>',
+                $audioStreamItem->getObservedAt()->format('Y-m-d H:i:s'),
+                $audioStreamItem->getSource()
+            ));
         }
 
-        dd('ok');
-        try {
-        } catch (\Exception $e) {
-            return Command::FAILURE;
-        }
+        $this->entityManager->flush();
 
         return Command::SUCCESS;
+    }
+
+    protected function storeAudioStreamItem(AudioStreamItem $audioStreamItem): bool
+    {
+        $lastAudioStreamItem = $this->entityManager
+            ->getRepository(AudioStreamItem::class)
+            ->findLastBySourceQueryBuilder($audioStreamItem->getSource())
+            ->getQuery()->getOneOrNullResult()
+        ;
+
+        if (null !== $lastAudioStreamItem && $lastAudioStreamItem->getTitle() === $audioStreamItem->getTitle()) {
+            return false;
+        }
+
+        $this->entityManager->persist($audioStreamItem);
+
+        return true;
     }
 }

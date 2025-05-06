@@ -14,6 +14,7 @@ abstract class AbstractAudioStreamItemFactory
     public static function createFromArray(array $data): AudioStreamItem
     {
         return (new AudioStreamItem())
+            ->setSource($data['source'])
             ->setName($data['name'])
             ->setTitle($data['title'])
             ->setGenre($data['genre'])
