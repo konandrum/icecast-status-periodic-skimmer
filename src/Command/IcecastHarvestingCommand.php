@@ -37,12 +37,12 @@ class IcecastHarvestingCommand extends Command
                     $audioStreamItem->getSource(),
                     $audioStreamItem->getTitle()
                 ));
+            } else {
+                $output->writeln(sprintf('<comment>[%s | %s] no item added</comment>',
+                    $audioStreamItem->getObservedAt()->format('Y-m-d H:i:s'),
+                    $audioStreamItem->getSource()
+                ));
             }
-
-            $output->writeln(sprintf('<comment>[%s | %s] no item added</comment>',
-                $audioStreamItem->getObservedAt()->format('Y-m-d H:i:s'),
-                $audioStreamItem->getSource()
-            ));
         }
 
         $this->entityManager->flush();
