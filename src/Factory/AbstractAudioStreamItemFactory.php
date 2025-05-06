@@ -17,7 +17,6 @@ abstract class AbstractAudioStreamItemFactory
             ->setSource($data['source'])
             ->setName($data['name'])
             ->setTitle($data['title'])
-            ->setGenre($data['genre'])
             ->setObservedAt(new \DateTime('now'))
         ;
     }

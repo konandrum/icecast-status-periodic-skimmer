@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: AudioStreamItemRepository::class)]
+#[ORM\Index(name: 'search_idx', columns: ['source', 'observed_at'])]
 class AudioStreamItem
 {
     #[ORM\Id]
@@ -24,9 +25,6 @@ class AudioStreamItem
 
     #[ORM\Column(length: 255, nullable: false)]
     private string $title;
-
-    #[ORM\Column(length: 255, nullable: false)]
-    private string $genre;
 
     #[ORM\Column(type: 'datetime', nullable: false)]
     private \DateTime $observedAt;
@@ -68,18 +66,6 @@ class AudioStreamItem
     public function setTitle(string $title): self
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function getGenre(): string
-    {
-        return $this->genre;
-    }
-
-    public function setGenre(string $genre): self
-    {
-        $this->genre = $genre;
 
         return $this;
     }

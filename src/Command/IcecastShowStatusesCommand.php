@@ -29,11 +29,10 @@ class IcecastShowStatusesCommand extends Command
         foreach ($this->icecastConfiguredSourcesFactory->buildSources() as $icecastSource) {
             $audioStreamItem = $icecastSource->getAudioStreamItem();
 
-            $output->writeln(sprintf('<info>[%s | %s] "%s" - %s</info>',
+            $output->writeln(sprintf('<info>[%s | %s] "%s"</info>',
                 $audioStreamItem->getObservedAt()->format('Y-m-d H:i:s'),
                 $audioStreamItem->getSource(),
-                $audioStreamItem->getTitle(),
-                $audioStreamItem->getGenre()
+                $audioStreamItem->getTitle()
             ));
         }
 
