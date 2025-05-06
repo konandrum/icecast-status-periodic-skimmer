@@ -22,7 +22,7 @@ class IcecastHarvestingCommand extends Command
     {
         $this
             ->setName('icecast:harvesting:run')
-            ->setDescription('Harvest icecast serveur informations')
+            ->setDescription('Harvest icecast serveur informations based on configured observed sources')
         ;
     }
 
