@@ -19,6 +19,22 @@ services:
     networks:
       db: ~
 
+  cron:
+    image: github.com/konandrum/icecast-status-periodic-skimmer/cron:dev
+    configs:
+      - source: php_conf
+        target: /usr/local/etc/php/php.ini
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ..:/var/www/app
+      - composer:/var/www/.composer
+    environment:
+      - APP_ENV=dev
+      - APP_DEBUG=1
+    networks:
+      db: ~
+
   postgres:
     image: postgres:${POSTGRES_VERSION:-17}-alpine
     environment:

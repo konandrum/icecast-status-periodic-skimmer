@@ -1,6 +1,9 @@
-stack_name = iscp
-source_tag = dev
+stack_name = isps
+php_source_tag = dev
 php_image_name = github.com/konandrum/icecast-status-periodic-skimmer/php-fpm
+cron_source_tag = cron-dev
+cron_image_name = github.com/konandrum/icecast-status-periodic-skimmer/cron
+image_tag = dev
 
 php_sources = src/
 php_container_id = $(shell docker ps --filter name="$(stack_name)_php" -q)
@@ -67,17 +70,19 @@ encore-production:
 	docker run --rm -it -v `pwd`:/usr/src/app -w /usr/src/app node:$(node_version) yarn encore production $(options)
 
 # IMAGES
-.PHONY: build-image
-build-image:
-	docker build --target=$(source_tag) -t $(php_image_name):$(source_tag) -f .docker/php/Dockerfile .
+.PHONY: build-images
+build-images:
+	docker build --target=$(php_source_tag) -t $(php_image_name):$(image_tag) -f .docker/php/Dockerfile .
+	docker build --target=$(cron_source_tag) -t $(cron_image_name):$(image_tag) -f .docker/php/Dockerfile .
 
 .PHONY: push-image
 push-image:
-	docker push $(php_image_name):$(source_tag)
+	docker push $(php_image_name):$(php_source_tag)
+	docker push $(cron_image_name):$(cron_source_tag)
 
 # PROJECT
 .PHONY: start
-start: build-image
+start: #build-images
 	docker stack deploy -c .docker/docker-compose.yaml $(stack_name)
 
 .PHONY: stop

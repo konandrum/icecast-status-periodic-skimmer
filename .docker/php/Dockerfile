@@ -23,9 +23,8 @@ RUN apt update \
     && docker-php-ext-configure pcntl \
     && docker-php-ext-install pcntl
 
-## Add php.ini configuration and the entrypoint script
+## Add php.ini configuration
 ADD .docker/php/php.ini /usr/local/etc/php/php.ini
-ADD .docker/php/entrypoint.sh /entrypoint.sh
 
 WORKDIR /var/www/app
 
@@ -44,7 +43,6 @@ COPY src src/
 ## Create empty var cache and var log directory
 RUN mkdir -p /var/www/app/var/cache /var/www/app/var/log
 
-ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm", "-F"]
 
 ######################
@@ -95,11 +93,32 @@ FROM build AS dev
 ## Install xDebug (putted at the end - CLUDGE)
 RUN pecl install xdebug-3.4.2 && docker-php-ext-enable xdebug
 
+#########################
+### STAGE 3: Cron-Dev ###
+#########################
+
+FROM dev AS cron-dev
+
+RUN apt update && apt install -y cron
+
+## Copy cron file to the cron.d directory
+ADD .docker/cron/crontab /etc/cron.d/isps-cron
+
+## Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/isps-cron
+
+## Apply cron job
+RUN crontab /etc/cron.d/isps-cron
+
+CMD ["cron", "-f"]
+
 #####################
-### STAGE 3: Prod ###
+### STAGE 4: Prod ###
 #####################
 
 FROM base AS prod
+
+ADD .docker/php/entrypoint.sh /entrypoint.sh
 
 ## Define environment vars
 ARG APP_VERSION
@@ -121,3 +140,25 @@ VOLUME /var/www/app/var/import
 VOLUME /var/www/app/public/build
 VOLUME /var/www/app/public/bundles
 VOLUME /tmp
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+##########################
+### STAGE 5: Cron-Prod ###
+##########################
+
+FROM prod AS cron
+
+RUN apt update && apt install -y cron
+
+## Copy cron file to the cron.d directory
+ADD .docker/cron/crontab /etc/cron.d/isps-cron
+
+## Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/isps-cron
+
+## Apply cron job
+RUN crontab /etc/cron.d/isps-cron
+
+ENTRYPOINT []
+CMD ["cron", "-f"]

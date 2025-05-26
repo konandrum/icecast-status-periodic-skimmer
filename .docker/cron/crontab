@@ -1,0 +1,2 @@
+# Run harvesting sf command every minutes
+* * * * * /usr/local/bin/php /var/www/app/bin/console icecast:harvesting:run > /dev/stdout 2>&1
