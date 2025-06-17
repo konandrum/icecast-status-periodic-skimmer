@@ -40,8 +40,20 @@ class ApiController extends AbstractController
     {
         $resolver
             ->setRequired('source')->setAllowedValues('source', array_keys($this->observedIcecastSources))
+            ->setDefault('at', null)->setAllowedTypes('at', ['null', 'string', \DateTime::class])->setNormalizer('at', function (Options $options, $value) {
+                if (is_string($value)) {
+                    $value = \DateTime::createFromFormat(\DateTime::W3C, $value);
+                }
+
+                return $value;
+            })
             ->setDefault('limit', 100)->setAllowedTypes('limit', ['int'])
             ->setDefault('criteria', [])->setNormalizer('criteria', function (Options $options, $value) {
+                if (null !== $options['at']) {
+                    // TODO RANGE with the date
+                    dd($options['at']);
+                }
+
                 return [
                     'source' => $options['source'],
                 ];
