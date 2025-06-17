@@ -21,10 +21,13 @@ class AudioStreamItem
     private string $source;
 
     #[ORM\Column(length: 255, nullable: false)]
-    private string $name;
+    private string $serverName;
 
     #[ORM\Column(length: 255, nullable: false)]
     private string $title;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private int $listenerCounter;
 
     #[ORM\Column(type: 'datetime', nullable: false)]
     private \DateTime $observedAt;
@@ -46,14 +49,14 @@ class AudioStreamItem
         return $this;
     }
 
-    public function getName(): string
+    public function getServerName(): string
     {
-        return $this->name;
+        return $this->serverName;
     }
 
-    public function setName(string $name): self
+    public function setServerName(string $serverName): self
     {
-        $this->name = $name;
+        $this->serverName = $serverName;
 
         return $this;
     }
@@ -66,6 +69,18 @@ class AudioStreamItem
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getListenerCounter(): int
+    {
+        return $this->listenerCounter;
+    }
+
+    public function setListenerCounter(int $listenerCounter): self
+    {
+        $this->listenerCounter = $listenerCounter;
 
         return $this;
     }

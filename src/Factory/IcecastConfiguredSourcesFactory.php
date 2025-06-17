@@ -28,7 +28,7 @@ class IcecastConfiguredSourcesFactory
                 ->setScheme($observedIcecastSource['scheme'])
                 ->setHost($observedIcecastSource['host'])
                 ->setStatusPath($observedIcecastSource['status_path'])
-                ->setSourcePath($observedIcecastSource['source_path'])
+                ->setServerName($observedIcecastSource['server_name'])
             ;
         }
 

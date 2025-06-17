@@ -15,8 +15,9 @@ abstract class AbstractAudioStreamItemFactory
     {
         return (new AudioStreamItem())
             ->setSource($data['source'])
-            ->setName($data['name'])
+            ->setServerName($data['server_name'])
             ->setTitle($data['title'])
+            ->setListenerCounter($data['listeners'])
             ->setObservedAt(new \DateTime('now'))
         ;
     }

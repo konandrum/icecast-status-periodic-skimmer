@@ -32,10 +32,11 @@ class IcecastHarvestingCommand extends Command
             $audioStreamItem = $icecastSource->getAudioStreamItem();
 
             if ($this->storeAudioStreamItem($audioStreamItem)) {
-                $output->writeln(sprintf('<info>[%s | %s] add "%s"</info>',
+                $output->writeln(sprintf('<info>[%s | %s] add "%s" (listeners: %d)</info>',
                     $audioStreamItem->getObservedAt()->format('Y-m-d H:i:s'),
                     $audioStreamItem->getSource(),
-                    $audioStreamItem->getTitle()
+                    $audioStreamItem->getTitle(),
+                    $audioStreamItem->getListenerCounter()
                 ));
             } else {
                 $output->writeln(sprintf('<comment>[%s | %s] no item added</comment>',

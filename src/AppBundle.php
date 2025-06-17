@@ -26,7 +26,7 @@ class AppBundle extends AbstractBundle
                             ->scalarNode('scheme')->defaultValue('https')->end()
                             ->scalarNode('host')->end()
                             ->scalarNode('status_path')->defaultValue('/status-json.xsl')->end()
-                            ->scalarNode('source_path')->isRequired()->cannotBeEmpty()->end()
+                            ->scalarNode('server_name')->isRequired()->cannotBeEmpty()->end()
                         ->end()
                     ->end()
                 ->end()

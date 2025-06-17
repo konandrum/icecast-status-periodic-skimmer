@@ -12,7 +12,7 @@ class IcecastSource
     private string $scheme;
     private string $host;
     private string $statusPath;
-    private string $sourcePath;
+    private string $serverName;
 
     public function __construct(
         private ClientInterface $httpClient
@@ -72,14 +72,14 @@ class IcecastSource
         return $this;
     }
 
-    public function getSourcePath(): string
+    public function getServerName(): string
     {
-        return $this->sourcePath;
+        return $this->serverName;
     }
 
-    public function setSourcePath(string $sourcePath): self
+    public function setServerName(string $serverName): self
     {
-        $this->sourcePath = $sourcePath;
+        $this->serverName = $serverName;
 
         return $this;
     }
@@ -98,9 +98,22 @@ class IcecastSource
         $response = $this->getHttpClient()->get($this->getUrl());
         $jsonContent = json_decode($response->getBody()->getContents(), true);
 
+        $dataSource = self::extractSourceData($jsonContent['icestats']['source'], $this->getServerName());
+
         return AbstractAudioStreamItemFactory::createFromArray(array_merge(
             ['source' => $this->getName()],
-            $jsonContent['icestats']['source'][$this->getSourcePath()]
+            $dataSource
         ));
+    }
+
+    public static function extractSourceData(array $dataSources, string $serverName): array
+    {
+        foreach ($dataSources as $dataSource) {
+            if ($serverName === $dataSource['server_name']) {
+                return $dataSource;
+            }
+        }
+
+        throw new \Exception(sprintf('No server_name found with value "%s"', $serverName));
     }
 }
