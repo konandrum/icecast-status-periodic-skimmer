@@ -30,7 +30,13 @@ class ApiController extends AbstractController
         $this->configureApiOptions($resolver);
         $options = $resolver->resolve($request->query->all());
 
-        $audioStreamItems = $this->em->getRepository(AudioStreamItem::class)->findBy($options['criteria'], $options['order_by'], $options['limit']);
+        $audioStreamItems = $this->em
+            ->getRepository(AudioStreamItem::class)
+            ->findByDateAndSourceQueryBuilder($options['source'], $options['at'])
+            ->getQuery()
+            ->getResult()
+        ;
+
         $jsonContent = $this->serializer->serialize($audioStreamItems, 'json');
 
         return JsonResponse::fromJsonString($jsonContent);
@@ -43,26 +49,15 @@ class ApiController extends AbstractController
             ->setDefault('at', null)->setAllowedTypes('at', ['null', 'string', \DateTime::class])->setNormalizer('at', function (Options $options, $value) {
                 if (is_string($value)) {
                     $value = \DateTime::createFromFormat(\DateTime::W3C, $value);
+
+                    if (false === $value) {
+                        return null;
+                    }
                 }
 
                 return $value;
             })
             ->setDefault('limit', 100)->setAllowedTypes('limit', ['int'])
-            ->setDefault('criteria', [])->setNormalizer('criteria', function (Options $options, $value) {
-                if (null !== $options['at']) {
-                    // TODO RANGE with the date
-                    dd($options['at']);
-                }
-
-                return [
-                    'source' => $options['source'],
-                ];
-            })
-            ->setDefault('order_by', null)->setNormalizer('order_by', function (Options $options, $value) {
-                return [
-                    'observedAt' => 'DESC',
-                ];
-            })
         ;
     }
 }
