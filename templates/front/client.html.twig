@@ -1,11 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-{% endblock %}
-
 {% block body %}
-<div id="isps">{{ '{{' }}message{{ '}}' }}</div>
-
-<script src="./rdwa-broadcasted.js"></script>
+<div
+    id="isps-reader"
+    data-host="http://isps.docker"
+    data-sources="rdwa_die|107.5FM|https://radio.garden/listen/rdwa-fm-107-5/uRGAQP9K,rdwa_luc|101.7FM|https://live.aurafm.org/R-Dwa-LUC.m3u"
+>
+</div>
 {% endblock %}
