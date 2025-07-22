@@ -1,0 +1,104 @@
+@keyframes scroll-rtl {
+    0% {
+        transform: translate3d(0,0,0);      /* position initiale à droite */
+    }
+    100% {
+        transform: translate3d(-100%,0,0);  /* position finale à gauche */
+    }
+}
+
+#isps-reader {
+    .isps_widget {
+        background-color: #BB121A;
+        border: none;
+        border-radius: 0.6rem;
+        display: flex;
+        flex-direction: row;
+        font-family: 'Roboto Condensed', sans-serif;
+        margin: 1rem;
+        padding: 0.5rem;
+        width: 42rem;
+
+        > * {
+            height: 3rem;
+        }
+
+        .isps_freq {
+            a {
+                background-image: url('../images/play-icon.png');
+                background-position: 0 0;
+                background-repeat: no-repeat;
+                background-size: contain;
+                color: #d4d4d4;
+                display: block;
+                font-weight: 600;
+                margin-right: 0.5rem;
+                padding: 1rem 1rem 1rem 3.5rem;
+                text-align: center;
+                text-decoration: none;
+
+                &:hover {
+                    background-image: url('../images/play-icon-hover.png');
+                    color: #FFF;
+                }
+            }
+        }
+
+        .isps_live {
+            display: flex;
+            flex-direction: row;
+            padding: 0 0 0 1.5rem;
+            position: relative;
+
+            i {
+                display: block;
+                font-size: 0.8rem;
+                font-style: normal;
+                font-weight: bold;
+                line-height: 3rem;
+                text-transform: uppercase;
+
+                &::before {
+                    aspect-ratio: 1;
+                    background-color: #000;
+                    border-radius: 100%;
+                    content: '';
+                    height: 10px;
+                    left: 0.5rem;
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+            }
+
+            .isps_live_title {
+                background: #DDD;
+                border-radius: 0.5rem;
+                border: 1px solid #888;
+                margin: 0.5rem;
+                width: 14rem;
+                overflow: hidden;
+                padding: 0.3rem 0;
+
+                p {
+                    animation: scroll-rtl 8s infinite linear;
+                    display: inline-block;
+                    font-family: "Poppins", sans-serif;
+                    font-size: 12px;
+                    margin: 0;
+                    padding-right: 2em;
+                    padding-left: 100%;
+                    white-space: nowrap;
+                }
+            }
+
+            &:hover > .isps_live_title {
+                background: #FFF;
+
+                > p {
+                    animation-play-state: paused;
+                }
+            }
+        }
+    }
+}

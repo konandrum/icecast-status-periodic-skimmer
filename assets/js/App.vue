@@ -39,13 +39,15 @@ export default {
 </script>
 
 <template>
-    <div v-for="(source) in options.sources">
+    <div class="isps_widget" v-for="(source) in options.sources">
         <span class="isps_freq">
             <a v-bind:href="source.link" target="_blank">{{ source.freq }}</a>
         </span>
         <span class="isps_live" v-if="audioStreams[source.name] != undefined">
-            <i>Live:</i>
-            <p>{{ audioStreams[source.name][0].title }}</p>
+            <i>Live</i>
+            <div class="isps_live_title">
+                <p>{{ audioStreams[source.name][0].title }}</p>
+            </div>
         </span>
     </div>
 </template>
