@@ -1,4 +1,6 @@
 <script>
+import moment from 'moment';
+
 export default {
     data() {
         return {
@@ -25,7 +27,6 @@ export default {
     },
     methods: {
         refreshAudioStreams(source) {
-            console.log(source);
             fetch("/api/v1/broadcasted_audio_stream?source=" + source, {"method": "GET"})
                 .then(response => response.json())
                 .then(result => this.audioStreams[source] = result);
@@ -33,6 +34,12 @@ export default {
             setTimeout(() => {
                 this.refreshAudioStreams(source);
             }, 5000);
+        },
+
+        formatDate(dateToFormat) {
+            if (dateToFormat) {
+                return moment(String(dateToFormat)).format('DD/MM/YYYY hh:mm')
+            }
         }
     }
 }
@@ -43,11 +50,40 @@ export default {
         <span class="isps_freq">
             <a v-bind:href="source.link" target="_blank">{{ source.freq }}</a>
         </span>
+
         <span class="isps_live" v-if="audioStreams[source.name] != undefined">
             <i>Live</i>
             <div class="isps_live_title">
                 <p>{{ audioStreams[source.name][0].title }}</p>
             </div>
         </span>
+
+        <label class="isps_show_advanced_label" v-bind:for="'isps_show_advanced_'+source.name" title="Rechercher le titre d'une musique diffusée">
+            <i>Rechercher le titre d'une musique diffusée sur {{ source.name }}</i>
+        </label>
+        <input class="isps_show_advanced_input" type="checkbox" v-bind:id="'isps_show_advanced_'+source.name" />
+        <div class="isps_advanced_container">
+            <form>
+                <label>Rechercher à une date</label>
+                <input type="datetime-local" name="observed_at" />
+
+                <input type="submit" value="Rechercher" />
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Auteur - Titre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(audioStream) in audioStreams[source.name]">
+                        <td class="isps_audio_stream_observed_at">{{ formatDate(audioStream.observedAt) }}</td>
+                        <td class="isps_audio_stream_title">{{ audioStream.title }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>

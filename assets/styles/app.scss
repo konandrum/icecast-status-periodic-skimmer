@@ -1,3 +1,6 @@
+$base-color: #BB121A;
+//$base-color: #4460bd;
+
 @keyframes scroll-rtl {
     0% {
         transform: translate3d(0,0,0);      /* position initiale à droite */
@@ -9,15 +12,16 @@
 
 #isps-reader {
     .isps_widget {
-        background-color: #BB121A;
+        background-color: $base-color;
         border: none;
         border-radius: 0.6rem;
         display: flex;
         flex-direction: row;
         font-family: 'Roboto Condensed', sans-serif;
         margin: 1rem;
-        padding: 0.5rem;
-        width: 42rem;
+        padding: 0.8rem 0.5rem;
+        position: relative;
+        width: 32rem;
 
         > * {
             height: 3rem;
@@ -72,11 +76,11 @@
             }
 
             .isps_live_title {
-                background: #DDD;
+                background: #BBB;
                 border-radius: 0.5rem;
                 border: 1px solid #888;
                 margin: 0.5rem;
-                width: 14rem;
+                width: 15rem;
                 overflow: hidden;
                 padding: 0.3rem 0;
 
@@ -88,6 +92,7 @@
                     margin: 0;
                     padding-right: 2em;
                     padding-left: 100%;
+                    text-shadow: 1px 1px 1px #DDD;
                     white-space: nowrap;
                 }
             }
@@ -97,6 +102,95 @@
 
                 > p {
                     animation-play-state: paused;
+                }
+            }
+        }
+
+        .isps_advanced_container {
+            background: $base-color;
+            border-radius: 0 0 0.5rem 0.5rem;
+            display: none;
+            height: auto;
+            opacity: 0;
+            padding: 0 0.5rem;
+            position: absolute;
+            right: 0;
+            top: 4.2rem;
+            width: 32rem;
+            z-index: 1000;
+            transition:
+                opacity 2s;
+
+            table {
+                background: #FFF;
+                border-radius: 0.5rem;
+                font-size: 0.8rem;
+                margin: 0.5rem 0;
+                width: 100%;
+
+                .isps_audio_stream_observed_at {
+                    width: 6.5rem;
+                }
+
+                tbody > tr {
+                    &:nth-child(even) {
+                        background-color: #f2f2f2;
+                    }
+
+                    &:hover {
+                        background-color: #CCC;
+                    }
+
+                    td {
+                        padding: 0.5rem;
+                    }
+                }
+            }
+        }
+
+        .isps_show_advanced_label {
+            background-image: url('../images/icons8-search.svg');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            display: block;
+            height: 3rem;
+            position: absolute;
+            right: 1rem;
+            width: 3rem;
+
+            i {
+                background-image: url('../images/icons8-audio-wave.png');
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                display: block;
+                height: 12px;
+                text-indent: -9999px;
+                width: 12px;
+                border-radius: 50%;
+                left: 6px;
+                padding: 8px;
+                position: absolute;
+                top: 5px;
+            }
+
+            &:hover {
+                cursor: pointer;
+
+                i {
+                    background-image: url('../images/icons8-audio-wave.gif');
+                }
+            }
+        }
+
+        .isps_show_advanced_input {
+            display: none;
+
+            &:checked {
+                & + .isps_advanced_container {
+                    display: block;
+                    opacity: 1;
                 }
             }
         }
