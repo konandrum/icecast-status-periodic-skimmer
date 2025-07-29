@@ -5,7 +5,9 @@ export default {
     data() {
         return {
             options: {},
-            audioStreams: {}
+            liveStream: {},
+            audioStreams: {},
+            searchDate: undefined
         }
     },
     mounted() {
@@ -29,16 +31,32 @@ export default {
         refreshAudioStreams(source) {
             fetch("/api/v1/broadcasted_audio_stream?source=" + source, {"method": "GET"})
                 .then(response => response.json())
-                .then(result => this.audioStreams[source] = result);
+                .then(function (result) {
+                    this.liveStream[source] = result[0];
+
+                    if (undefined == this.searchDate) {
+                        this.audioStreams[source] = result;
+                    }
+                }.bind(this))
+            ;
 
             setTimeout(() => {
                 this.refreshAudioStreams(source);
             }, 5000);
         },
 
+        searchAudioStreams(source) {
+            console.log("/api/v1/broadcasted_audio_stream?source=" + source + "&at=" + encodeURIComponent(moment(String(this.searchDate)).format('YYYY-MM-DDTHH:mm:ssZ')));
+
+            fetch("/api/v1/broadcasted_audio_stream?source=" + source + "&at=" + encodeURIComponent(moment(String(this.searchDate)).format('YYYY-MM-DDTHH:mm:ssZ')), {"method": "GET"})
+                .then(response => response.json())
+                .then(result => this.audioStreams[source] = result)
+            ;
+        },
+
         formatDate(dateToFormat) {
             if (dateToFormat) {
-                return moment(String(dateToFormat)).format('DD/MM/YYYY hh:mm')
+                return moment(String(dateToFormat)).format('DD/MM/YYYY HH:mm')
             }
         }
     }
@@ -51,10 +69,10 @@ export default {
             <a v-bind:href="source.link" target="_blank">{{ source.freq }}</a>
         </span>
 
-        <span class="isps_live" v-if="audioStreams[source.name] != undefined">
+        <span class="isps_live" v-if="liveStream[source.name] != undefined">
             <i>Live</i>
             <div class="isps_live_title">
-                <p>{{ audioStreams[source.name][0].title }}</p>
+                <p>{{ liveStream[source.name].title }}</p>
             </div>
         </span>
 
@@ -65,9 +83,7 @@ export default {
         <div class="isps_advanced_container">
             <form>
                 <label>Rechercher à une date</label>
-                <input type="datetime-local" name="observed_at" />
-
-                <input type="submit" value="Rechercher" />
+                <input type="datetime-local" name="observed_at" v-model="searchDate" v-on:input="searchAudioStreams(source.name)"/>
             </form>
 
             <table>
