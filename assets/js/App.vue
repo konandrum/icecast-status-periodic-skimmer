@@ -82,24 +82,28 @@ export default {
         <input class="isps_show_advanced_input" type="checkbox" v-bind:id="'isps_show_advanced_'+source.name" />
         <div class="isps_advanced_container">
             <form>
-                <label>Rechercher à une date</label>
+                <label>Rechercher par date</label>
                 <input type="datetime-local" name="observed_at" v-model="searchDate" v-on:input="searchAudioStreams(source.name)"/>
             </form>
 
-            <table>
+            <table v-if="audioStreams[source.name].length > 0">
                 <thead>
                     <tr>
                         <th>Date</th>
                         <th>Auteur - Titre</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody >
                     <tr v-for="(audioStream) in audioStreams[source.name]">
                         <td class="isps_audio_stream_observed_at">{{ formatDate(audioStream.observedAt) }}</td>
                         <td class="isps_audio_stream_title">{{ audioStream.title }}</td>
                     </tr>
                 </tbody>
             </table>
+
+            <div class="isps_empty_results" v-if="audioStreams[source.name].length == 0">
+                <p>Aucuns titre observé à cette date</p>
+            </div>
         </div>
     </div>
 </template>
