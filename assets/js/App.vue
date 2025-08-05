@@ -46,8 +46,6 @@ export default {
         },
 
         searchAudioStreams(source) {
-            console.log("/api/v1/broadcasted_audio_stream?source=" + source + "&at=" + encodeURIComponent(moment(String(this.searchDate)).format('YYYY-MM-DDTHH:mm:ssZ')));
-
             fetch("/api/v1/broadcasted_audio_stream?source=" + source + "&at=" + encodeURIComponent(moment(String(this.searchDate)).format('YYYY-MM-DDTHH:mm:ssZ')), {"method": "GET"})
                 .then(response => response.json())
                 .then(result => this.audioStreams[source] = result)
@@ -56,7 +54,22 @@ export default {
 
         formatDate(dateToFormat) {
             if (dateToFormat) {
-                return moment(String(dateToFormat)).format('DD/MM/YYYY HH:mm')
+                return moment(String(dateToFormat)).format('DD/MM/YYYY HH:mm');
+            }
+        },
+
+        playPause(event) {
+            let player = event.target;
+            let audio = player.querySelector('audio');
+
+            if (audio.paused || audio.ended) {
+                console.log('play');
+                audio.play();
+                player.classList.add('active');
+            } else {
+                console.log('pause');
+                audio.pause();
+                player.classList.remove('active');
             }
         }
     }
@@ -64,13 +77,18 @@ export default {
 </script>
 
 <template>
-    <div class="isps_widget" v-for="(source) in options.sources">
-        <span class="isps_freq">
-            <a v-bind:href="source.link" target="_blank">{{ source.freq }}</a>
-        </span>
+    <div v-bind:class="'isps_widget '+source.name" v-for="(source) in options.sources">
+        <a class="isps_light_player" v-on:click="playPause($event)">
+            <audio v-bind:id="'isps_audio_'+source.name" xmlns="http://www.w3.org/1999/xhtml" controls="false" preload="none">
+                <source v-bind:src="source.link" type="application/ogg" />
+            </audio>
+        </a>
+
+        <span class="isps_freq">{{ source.freq }}</span>
 
         <span class="isps_live" v-if="liveStream[source.name] != undefined">
             <i>Live</i>
+
             <div class="isps_live_title">
                 <p>{{ liveStream[source.name].title }}</p>
             </div>
@@ -86,7 +104,7 @@ export default {
                 <input type="datetime-local" name="observed_at" v-model="searchDate" v-on:input="searchAudioStreams(source.name)"/>
             </form>
 
-            <table v-if="audioStreams[source.name].length > 0">
+            <table v-if="audioStreams[source.name] != undefined && audioStreams[source.name].length > 0">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -101,7 +119,7 @@ export default {
                 </tbody>
             </table>
 
-            <div class="isps_empty_results" v-if="audioStreams[source.name].length == 0">
+            <div class="isps_empty_results" v-if="audioStreams[source.name] == undefined || audioStreams[source.name].length == 0">
                 <p>Aucuns titre observé à cette date</p>
             </div>
         </div>

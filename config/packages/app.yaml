@@ -6,9 +6,9 @@ app:
         rdwa_luc:
             host: live.aurafm.org
             server_name: 'RDWA 101.7'
-        #radio_blv:
-        #    host: live.aurafm.org
-        #    server_name: 'RadioBLV'
-        #declic_radio:
-        #    host: live.aurafm.org
-        #    server_name: 'DeclicRADIO'
+        radio_blv:
+            host: live.aurafm.org
+            server_name: 'RadioBLV'
+        declic_radio:
+            host: live.aurafm.org
+            server_name: 'DeclicRADIO'
