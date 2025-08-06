@@ -1,6 +1,7 @@
-$base-color: #BB121A;
-$text-color: #D4D4D4;
-//$base-color: #4460bd;
+@import './themes';
+
+$base-color: #888;
+$text-color: #000;
 
 @keyframes scroll-rtl {
     0% {
@@ -80,6 +81,7 @@ $text-color: #D4D4D4;
             position: relative;
 
             i {
+                color: $text-color;
                 display: block;
                 font-size: 0.8rem;
                 font-style: normal;
@@ -89,7 +91,7 @@ $text-color: #D4D4D4;
 
                 &::before {
                     aspect-ratio: 1;
-                    background-color: #000;
+                    background-color: $text-color;
                     border-radius: 100%;
                     content: '';
                     height: 10px;
