@@ -68,7 +68,6 @@ export default {
 
             if (!source.sound.playing()) {
                 source.sound.play();
-                console.log(source.sound);
                 player.classList.add('active');
             } else {
                 source.sound.pause();
