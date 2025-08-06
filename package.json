@@ -23,6 +23,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "howler": "^2.2.4",
         "moment": "^2.30.1"
     }
 }

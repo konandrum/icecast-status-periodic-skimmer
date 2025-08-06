@@ -1,0 +1,33 @@
+@mixin theme($base-color: #888, $text-color: #000) {
+    background-color: $base-color;
+
+    .isps_freq {
+        color: $text-color;
+    }
+
+    .isps_live {
+        i {
+            color: $text-color;
+
+            &::before {
+                background-color: $text-color;
+            }
+        }
+    }
+
+    .isps_advanced_container {
+        background-color: $base-color;
+    }
+}
+
+#isps-reader .rdwa_die.isps_widget {
+    @include theme($base-color: #BB121A, $text-color: #570303);
+}
+
+#isps-reader .rdwa_luc.isps_widget {
+    @include theme($base-color: #FEB614, $text-color: #5a420b);
+}
+
+#isps-reader .radio_blv.isps_widget {
+    @include theme($base-color: #4b8ad3, $text-color: #FFF);
+}

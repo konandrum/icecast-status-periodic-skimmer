@@ -1,6 +1,7 @@
-$base-color: #BB121A;
-$text-color: #D4D4D4;
-//$base-color: #4460bd;
+@import './themes';
+
+$base-color: #888;
+$text-color: #000;
 
 @keyframes scroll-rtl {
     0% {
@@ -28,25 +29,45 @@ $text-color: #D4D4D4;
             height: 3rem;
         }
 
-        .isps_freq {
-            a {
-                background-image: url('../images/play-icon.png');
-                background-position: 0 0;
-                background-repeat: no-repeat;
-                background-size: contain;
-                color: $text-color;
-                display: block;
-                font-weight: 600;
-                margin-right: 0.5rem;
-                padding: 1rem 1rem 1rem 3.5rem;
-                text-align: center;
-                text-decoration: none;
+        .isps_light_player {
+            background-image: url('../images/play-icon.png');
+            background-position: 0 0;
+            background-repeat: no-repeat;
+            background-size: contain;
+            color: $text-color;
+            cursor: pointer;
+            display: block;
+            font-weight: 600;
+            height: 3rem;
+            margin-right: 0.5rem;
+            text-align: center;
+            text-decoration: none;
+            text-indent: -9999px;
+            width: 3rem;
+
+            &:hover {
+                background-image: url('../images/play-icon-hover.png');
+                color: #FFF;
+            }
+
+            &.active {
+                background-image: url('../images/pause-icon.png');
 
                 &:hover {
-                    background-image: url('../images/play-icon-hover.png');
-                    color: #FFF;
+                    background-image: url('../images/pause-icon-hover.png');
                 }
             }
+        }
+
+        .isps_freq {
+            color: $text-color;
+            display: block;
+            font-weight: 600;
+            line-height: 3rem;
+            margin: 0 0.2rem;
+            text-align: center;
+            text-decoration: none;
+            width: 4rem;
         }
 
         .isps_live {
@@ -56,6 +77,7 @@ $text-color: #D4D4D4;
             position: relative;
 
             i {
+                color: $text-color;
                 display: block;
                 font-size: 0.8rem;
                 font-style: normal;
@@ -65,7 +87,7 @@ $text-color: #D4D4D4;
 
                 &::before {
                     aspect-ratio: 1;
-                    background-color: #000;
+                    background-color: $text-color;
                     border-radius: 100%;
                     content: '';
                     height: 10px;
@@ -81,7 +103,7 @@ $text-color: #D4D4D4;
                 border-radius: 0.5rem;
                 border: 1px solid #888;
                 margin: 0.5rem;
-                width: 15rem;
+                width: 16rem;
                 overflow: hidden;
                 padding: 0.3rem 0;
 
