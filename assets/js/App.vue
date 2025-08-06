@@ -1,5 +1,6 @@
 <script>
 import moment from 'moment';
+import {Howl, Howler} from 'howler';
 
 export default {
     data() {
@@ -19,7 +20,11 @@ export default {
             return {
                 'name': tokens[0],
                 'freq': tokens[1],
-                'link': tokens[2]
+                'link': tokens[2],
+                'sound': new Howl({
+                    src: [tokens[2]],
+                    html5: true,
+                })
             };
         });
 
@@ -58,17 +63,15 @@ export default {
             }
         },
 
-        playPause(event) {
+        playPause(event, source) {
             let player = event.target;
-            let audio = player.querySelector('audio');
 
-            if (audio.paused || audio.ended) {
-                console.log('play');
-                audio.play();
+            if (!source.sound.playing()) {
+                source.sound.play();
+                console.log(source.sound);
                 player.classList.add('active');
             } else {
-                console.log('pause');
-                audio.pause();
+                source.sound.pause();
                 player.classList.remove('active');
             }
         }
@@ -78,11 +81,8 @@ export default {
 
 <template>
     <div v-bind:class="'isps_widget '+source.name" v-for="(source) in options.sources">
-        <a class="isps_light_player" v-on:click="playPause($event)">
-            <audio v-bind:id="'isps_audio_'+source.name" xmlns="http://www.w3.org/1999/xhtml" controls="false" preload="none">
-                <source v-bind:src="source.link" type="application/ogg" />
-            </audio>
-        </a>
+        <a class="isps_light_player" v-on:click="playPause($event, source)"></a>
+
 
         <span class="isps_freq">{{ source.freq }}</span>
 
