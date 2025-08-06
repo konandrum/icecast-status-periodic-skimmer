@@ -82,7 +82,6 @@ export default {
     <div v-bind:class="'isps_widget '+source.name" v-for="(source) in options.sources">
         <a class="isps_light_player" v-on:click="playPause($event, source)"></a>
 
-
         <span class="isps_freq">{{ source.freq }}</span>
 
         <span class="isps_live" v-if="liveStream[source.name] != undefined">
