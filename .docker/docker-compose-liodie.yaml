@@ -1,0 +1,100 @@
+---
+version: '3.9'
+
+services:
+
+  nginx:
+    image: nginx:latest
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik
+        - traefik.docker.lbswarm=true
+        - traefik.http.services.isps-nginx.loadbalancer.server.port=80
+        - traefik.http.routers.isps-nginx.entryPoints=web
+        - traefik.http.routers.isps-nginx.rule=Host(`isps.liodie.fr`)
+        - traefik.http.routers.isps-nginx-https.entrypoints=websecure
+        - traefik.http.routers.isps-nginx-https.rule=Host(`isps.liodie.fr`)
+        - traefik.http.routers.isps-nginx-https.tls.certresolver=letsencrypt
+    configs:
+      - source: nginx_conf
+        target: /etc/nginx/conf.d/default.conf
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ../public:/var/www/app/public
+    networks:
+      fastcgi: ~
+      traefik: ~
+
+  php:
+    image: gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/php-fpm:latest
+    configs:
+      - source: php_conf
+        target: /usr/local/etc/php/php.ini
+    environment:
+      - APP_ENV=prod
+    networks:
+      fastcgi: ~
+      db: ~
+
+  cron:
+    image: gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/cron:latest
+    configs:
+      - source: php_conf
+        target: /usr/local/etc/php/php.ini
+    environment:
+      - APP_ENV=prod
+    networks:
+      db: ~
+
+  postgres:
+    image: postgres:${POSTGRES_VERSION:-17}-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-isps}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-toor}
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:rw
+    networks:
+      db: ~
+
+  adminer:
+    image: adminer:latest
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik
+        - traefik.docker.lbswarm=true
+        - traefik.http.services.isps-adminer.loadbalancer.server.port=8080
+        - traefik.http.routers.isps-adminer.entryPoints=web
+        - traefik.http.routers.isps-adminer.rule=Host(`adminer.isps.liodie.fr`)
+        - traefik.http.routers.isps-adminer-https.entrypoints=websecure
+        - traefik.http.routers.isps-adminer-https.rule=Host(`adminer.isps.liodie.fr`)
+        - traefik.http.routers.isps-adminer-https.tls.certresolver=letsencrypt
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      db: ~
+      traefik: ~
+
+configs:
+  php_conf:
+    file: ./php/php.ini
+  nginx_conf:
+    file: ./nginx/nginx.conf
+
+volumes:
+  postgres_data: ~
+
+networks:
+  db: ~
+  fastcgi: ~
+  traefik:
+    external: true
