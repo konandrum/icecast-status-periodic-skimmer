@@ -29,15 +29,14 @@ ADD .docker/php/php.ini /usr/local/etc/php/php.ini
 WORKDIR /var/www/app
 
 ## Copy App files
-#COPY composer.json composer.lock symfony.lock .env* package.json webpack.config.js ./
-COPY composer.json composer.lock symfony.lock .env* ./
-#COPY assets assets/
+COPY composer.json composer.lock symfony.lock .env* package.json webpack.config.js ./
+COPY assets assets/
 COPY bin bin/
 COPY config config/
 COPY migrations migrations/
 COPY public public/
 COPY src src/
-#COPY templates templates/
+COPY templates templates/
 #COPY translations translations/
 
 ## Create empty var cache and var log directory
@@ -72,14 +71,14 @@ ENV NODE_VERSION=24
 
 ## Build assets
 RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash -
-#RUN . $NVM_DIR/nvm.sh \
-#    && nvm install $NODE_VERSION \
-#    && nvm alias default $NODE_VERSION \
-#    && nvm use default \
-#    && npm install --global yarn \
-#    && yarn --version \
-#    && yarn install \
-#    && yarn encore production
+RUN . $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default \
+    && npm install --global yarn \
+    && yarn --version \
+    && yarn install \
+    && yarn encore production
 
 ENV NODE_PATH=$NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH=$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
