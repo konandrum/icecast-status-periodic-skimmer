@@ -1,8 +1,8 @@
 stack_name = isps
 php_source_tag = dev
-php_image_name = github.com/konandrum/icecast-status-periodic-skimmer/php-fpm
+php_image_name = gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/php-fpm
 cron_source_tag = cron-dev
-cron_image_name = github.com/konandrum/icecast-status-periodic-skimmer/cron
+cron_image_name = gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/cron
 image_tag = dev
 
 php_sources = src/
