@@ -33,9 +33,21 @@ start-prod:
     SSH_USER: ${SSH_USER}
     SSH_PASSWORD: ${SSH_PASSWORD}
   image: docker:latest
+  before_script:
+    - apt update -qq
+    - apt install -y -qq ssh
+    - apt install -y -qq rsync
+    - apt install -y -qq sshpass
+    - mkdir -p ~/.ssh
+    - echo 'StrictHostKeyChecking no' >> ~/.ssh/config
+    - echo 'HostKeyAlgorithms=+ssh-rsa' >> ~/.ssh/config
+    - export SSHPASS=$SSH_PASSWORD
   script:
-    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    - docker stack deploy -c ${CI_PROJECT_DIR}/.docker/docker-compose-liodie.yml ${STACK_NAME}_prod
+    - sshpass -e rsync --exclude={'.git/','.gitlab-ci.yml'} -avz ${CI_PROJECT_DIR}/.docker ${SSH_USER}@${SSH_HOST}:/srv/docker/isps-docker-stack/
+    - sshpass -e ssh -t ${SSH_USER}@${SSH_HOST} "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}"
+    - sshpass -e ssh -t ${SSH_USER}@${SSH_HOST} "docker image pull ${FPM_RELEASE_IMAGE}:latest"
+    - sshpass -e ssh -t ${SSH_USER}@${SSH_HOST} "docker image pull ${CRON_RELEASE_IMAGE}:latest"
+    - sshpass -e ssh -t ${SSH_USER}@${SSH_HOST} "docker stack deploy -c /srv/docker/isps-docker-stack/docker-compose-liodie.yaml ${STACK_NAME}"
   environment:
     name: production
     url: https://isps.liodie.fr
@@ -52,7 +64,8 @@ deploy-to-prod:
   image: docker:latest
   script:
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    - docker service update --with-registry-auth ${STACK_NAME}_prod_php --update-monitor 10ms --image ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG}
+    - docker service update --with-registry-auth ${STACK_NAME}_php --update-monitor 10ms --image ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG}
+    - docker service update --with-registry-auth ${STACK_NAME}_cron --update-monitor 10ms --image ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG}
   environment:
     name: production
     url: https://isps.liodie.fr

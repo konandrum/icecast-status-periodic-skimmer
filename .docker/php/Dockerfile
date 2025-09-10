@@ -25,6 +25,7 @@ RUN apt update \
 
 ## Add php.ini configuration
 ADD .docker/php/php.ini /usr/local/etc/php/php.ini
+ADD .docker/php/entrypoint.sh /entrypoint.sh
 
 WORKDIR /var/www/app
 
@@ -42,6 +43,7 @@ COPY templates templates/
 ## Create empty var cache and var log directory
 RUN mkdir -p /var/www/app/var/cache /var/www/app/var/log
 
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm", "-F"]
 
 ######################
@@ -109,6 +111,7 @@ RUN chmod 0644 /etc/cron.d/isps-cron
 ## Apply cron job
 RUN crontab /etc/cron.d/isps-cron
 
+ENTRYPOINT []
 CMD ["cron", "-f"]
 
 #####################
@@ -137,8 +140,6 @@ VOLUME /var/www/app/var/log
 VOLUME /var/www/app/var/import
 VOLUME /var/www/app/public/build
 VOLUME /tmp
-
-ENTRYPOINT ["/entrypoint.sh"]
 
 ##########################
 ### STAGE 5: Cron-Prod ###
