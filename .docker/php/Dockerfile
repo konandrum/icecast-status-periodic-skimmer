@@ -120,8 +120,6 @@ CMD ["cron", "-f"]
 
 FROM base AS prod
 
-ADD .docker/php/entrypoint.sh /entrypoint.sh
-
 ## Define environment vars
 ARG APP_VERSION
 ENV APP_VERSION=${APP_VERSION}
