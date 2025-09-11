@@ -18,8 +18,11 @@ build-docker-image:
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
     #- docker buildx build --cache-from ${FPM_RELEASE_IMAGE}:latest --target prod --build-arg APP_VERSION=${CI_COMMIT_TAG:-test} -t ${FPM_RELEASE_IMAGE}:latest -t ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test} ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
     #- docker buildx build --cache-from ${CRON_RELEASE_IMAGE}:latest --target cron --build-arg APP_VERSION=${CI_COMMIT_TAG::-test} -t ${CRON_RELEASE_IMAGE}:latest -t ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test} ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
-    - docker buildx build --platform=linux/arm64/v8 --target prod --build-arg APP_VERSION=${CI_COMMIT_TAG:-test} -t ${FPM_RELEASE_IMAGE}:latest -t ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test} ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
-    - docker buildx build --platform=linux/arm64/v8 --target cron --build-arg APP_VERSION=${CI_COMMIT_TAG::-test} -t ${CRON_RELEASE_IMAGE}:latest -t ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test} ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
+    - docker buildx create --name armbuilder
+    - docker buildx use armbuilder
+    - docker buildx inspect --bootstrap
+    - docker buildx build --platform=linux/amd64,linux/arm64,linux/arm64/v8 --target prod --build-arg APP_VERSION=${CI_COMMIT_TAG:-test} -t ${FPM_RELEASE_IMAGE}:latest -t ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test} ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
+    - docker buildx build --platform=linux/amd64,linux/arm64,linux/arm64/v8 --target cron --build-arg APP_VERSION=${CI_COMMIT_TAG::-test} -t ${CRON_RELEASE_IMAGE}:latest -t ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test} ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
     - docker push ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}
     - docker push ${FPM_RELEASE_IMAGE}:latest
     - docker push ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}
