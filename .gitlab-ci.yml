@@ -43,7 +43,7 @@ start-prod:
     - echo 'HostKeyAlgorithms=+ssh-rsa' >> ~/.ssh/config
     - export SSHPASS=$SSH_PASSWORD
   script:
-    - sshpass -e rsync --exclude={'.git/','.gitlab-ci.yml'} -avz ${CI_PROJECT_DIR}/.docker ${SSH_USER}@${SSH_HOST}:/srv/docker/isps-docker-stack/
+    - sshpass -e rsync --exclude={'.git/','.gitlab-ci.yml'} -avz ${CI_PROJECT_DIR}/.docker/ ${SSH_USER}@${SSH_HOST}:/srv/docker/isps-docker-stack/
     - sshpass -e ssh -t ${SSH_USER}@${SSH_HOST} "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}"
     - sshpass -e ssh -t ${SSH_USER}@${SSH_HOST} "docker image pull ${FPM_RELEASE_IMAGE}:latest"
     - sshpass -e ssh -t ${SSH_USER}@${SSH_HOST} "docker image pull ${CRON_RELEASE_IMAGE}:latest"
