@@ -64,25 +64,25 @@ services:
     networks:
       db: ~
 
-  adminer:
-    image: adminer:latest
-    deploy:
-      labels:
-        - traefik.enable=true
-        - traefik.docker.network=traefik
-        - traefik.docker.lbswarm=true
-        - traefik.http.services.isps-adminer.loadbalancer.server.port=8080
-        - traefik.http.routers.isps-adminer.entryPoints=web
-        - traefik.http.routers.isps-adminer.rule=Host(`adminer.isps.liodie.fr`)
-        - traefik.http.routers.isps-adminer-https.entrypoints=websecure
-        - traefik.http.routers.isps-adminer-https.rule=Host(`adminer.isps.liodie.fr`)
-        - traefik.http.routers.isps-adminer-https.tls.certresolver=letsencrypt
-    volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    networks:
-      db: ~
-      traefik: ~
+#  adminer:
+#    image: adminer:latest
+#    deploy:
+#      labels:
+#        - traefik.enable=true
+#        - traefik.docker.network=traefik
+#        - traefik.docker.lbswarm=true
+#        - traefik.http.services.isps-adminer.loadbalancer.server.port=8080
+#        - traefik.http.routers.isps-adminer.entryPoints=web
+#        - traefik.http.routers.isps-adminer.rule=Host(`adminer.isps.liodie.fr`)
+#        - traefik.http.routers.isps-adminer-https.entrypoints=websecure
+#        - traefik.http.routers.isps-adminer-https.rule=Host(`adminer.isps.liodie.fr`)
+#        - traefik.http.routers.isps-adminer-https.tls.certresolver=letsencrypt
+#    volumes:
+#      - /etc/timezone:/etc/timezone:ro
+#      - /etc/localtime:/etc/localtime:ro
+#    networks:
+#      db: ~
+#      traefik: ~
 
 configs:
   php_conf:

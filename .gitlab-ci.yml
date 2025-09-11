@@ -32,7 +32,7 @@ start-prod:
     SSH_HOST: ${SSH_HOST}
     SSH_USER: ${SSH_USER}
     SSH_PASSWORD: ${SSH_PASSWORD}
-  image: docker:latest
+  image: debian:stable
   before_script:
     - apt update -qq
     - apt install -y -qq ssh
