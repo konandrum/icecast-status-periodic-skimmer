@@ -14,9 +14,9 @@ variables:
 
 build-docker-image:
   stage: build
-  timeout: 3h
+  timeout: 5h
   variables:
-    RUNNER_SCRIPT_TIMEOUT: 2h
+    RUNNER_SCRIPT_TIMEOUT: 4h
   script:
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
     #- docker buildx build --cache-from ${FPM_RELEASE_IMAGE}:latest --target prod --build-arg APP_VERSION=${CI_COMMIT_TAG:-test} -t ${FPM_RELEASE_IMAGE}:latest -t ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test} ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
