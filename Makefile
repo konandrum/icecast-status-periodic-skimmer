@@ -1,9 +1,9 @@
 stack_name = isps
-php_source_tag = dev
+php_source_tag = dev-alpine
 php_image_name = gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/php-fpm
-cron_source_tag = cron-dev
+cron_source_tag = cron-dev-alpine
 cron_image_name = gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/cron
-image_tag = dev
+image_tag = dev-alpine
 
 php_sources = src/
 php_container_id = $(shell docker ps --filter name="$(stack_name)_php" -q)

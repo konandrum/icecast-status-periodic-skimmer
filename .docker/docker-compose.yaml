@@ -28,7 +28,7 @@ services:
       traefik_reverse_proxy: ~
 
   php:
-    image: gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/php-fpm:dev
+    image: gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/php-fpm:dev-alpine
     configs:
       - source: php_conf
         target: /usr/local/etc/php/php.ini
@@ -45,7 +45,7 @@ services:
       db: ~
 
   cron:
-    image: gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/cron:dev
+    image: gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/cron:dev-alpine
     configs:
       - source: php_conf
         target: /usr/local/etc/php/php.ini
