@@ -77,6 +77,8 @@ stop-prod:
     url: https://isps.liodie.fr
     action: stop
   when: manual
+  only:
+    - tags
 
 deploy-to-prod:
   stage: deploy
