@@ -65,12 +65,13 @@ deploy-to-prod:
   stage: deploy
   variables:
     DOCKER_HOST: ssh://${SSH_USER}@${SSH_HOST}
+    IMAGE_TAG_SUFFIX: alpine-arm64
   script:
     - eval $(ssh-agent -s); echo "$SSH_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh; chmod 700 ~/.ssh; ssh-keyscan -t ed25519 $SSH_HOST >> ~/.ssh/known_hosts
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    - docker service update --with-registry-auth ${STACK_NAME}_php --update-monitor 10ms --image ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG}-alpine
-    - docker service update --with-registry-auth ${STACK_NAME}_cron --update-monitor 10ms --image ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG}-alpine
+    - docker service update --with-registry-auth ${STACK_NAME}_php --update-monitor 10ms --image ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG}-${IMAGE_TAG_SUFFIX}
+    - docker service update --with-registry-auth ${STACK_NAME}_cron --update-monitor 10ms --image ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG}-${IMAGE_TAG_SUFFIX}
   environment:
     name: production
     url: https://isps.liodie.fr
