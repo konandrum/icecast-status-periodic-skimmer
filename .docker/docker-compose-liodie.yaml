@@ -22,7 +22,7 @@ services:
     volumes:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ../public:/var/www/app/public
+      - public:/var/www/app/public:ro
     networks:
       fastcgi: ~
       traefik: ~
@@ -32,6 +32,8 @@ services:
     configs:
       - source: php_conf
         target: /usr/local/etc/php/php.ini
+    volumes:
+      - public:/var/www/app/public
     environment:
       - APP_ENV=prod
       - APP_SECRET=uRee4iehie4ahtei2eengequ
@@ -95,6 +97,7 @@ configs:
     file: ./nginx/nginx.conf
 
 volumes:
+  public: ~
   postgres_data: ~
 
 networks:
