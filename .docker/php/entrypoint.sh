@@ -23,8 +23,8 @@ setuser() {
 	uid=${DEV_USER_ID:-33}
 	gid=${DEV_GROUP_ID:-33}
 
-	usermod -u $uid www-data
-	groupmod -g $gid www-data
+	test -x $(which usermod) && usermod -u $uid www-data
+	test -x $(which groupmod) && groupmod -g $gid www-data
 }
 
 setpermissions() {
