@@ -29,7 +29,7 @@ build-docker-image-amd64:
 build-docker-image-arm64:
   stage: build
   variables:
-    DOCKER_HOST: ${SSH_USER}@${SSH_HOST}
+    DOCKER_HOST: ssh://${SSH_USER}@${SSH_HOST}
   script:
     - eval $(ssh-agent -s); echo "$SSH_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh; chmod 700 ~/.ssh; ssh-keyscan -t ed25519 $SSH_HOST >> ~/.ssh/known_hosts
@@ -45,7 +45,7 @@ build-docker-image-arm64:
 start-prod:
   stage: start
   variables:
-    DOCKER_HOST: ${SSH_USER}@${SSH_HOST}
+    DOCKER_HOST: ssh://${SSH_USER}@${SSH_HOST}
   script:
     - eval $(ssh-agent -s); echo "$SSH_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh; chmod 700 ~/.ssh; ssh-keyscan -t ed25519 $SSH_HOST >> ~/.ssh/known_hosts
@@ -61,7 +61,7 @@ start-prod:
 deploy-to-prod:
   stage: deploy
   variables:
-    DOCKER_HOST: ${SSH_USER}@${SSH_HOST}
+    DOCKER_HOST: ssh://${SSH_USER}@${SSH_HOST}
   script:
     - eval $(ssh-agent -s); echo "$SSH_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh; chmod 700 ~/.ssh; ssh-keyscan -t ed25519 $SSH_HOST >> ~/.ssh/known_hosts
