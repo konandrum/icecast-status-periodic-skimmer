@@ -6,6 +6,7 @@ stages:
   - build
   - start
   - deploy
+  - stop
 
 variables:
   STACK_NAME: isps
@@ -58,9 +59,24 @@ start-prod:
     name: production
     url: https://isps.liodie.fr
     action: start
+    on_stop: stop-prod
   when: manual
   only:
     - tags
+
+stop-prod:
+  stage: stop
+  variables:
+    DOCKER_HOST: ssh://${SSH_USER}@${SSH_HOST}
+  script:
+    - eval $(ssh-agent -s); echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh; chmod 700 ~/.ssh; ssh-keyscan -t ed25519 $SSH_HOST >> ~/.ssh/known_hosts
+    - docker stack rm ${STACK_NAME}
+  environment:
+    name: production
+    url: https://isps.liodie.fr
+    action: stop
+  when: manual
 
 deploy-to-prod:
   stage: deploy
