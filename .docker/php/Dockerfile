@@ -171,7 +171,7 @@ FROM php:8.4-fpm-alpine AS base-alpine
 ## Install dependencies
 RUN apk update && apk upgrade \
     && apk add --no-cache linux-headers autoconf bash gcc git rsync libzip-dev zip libpq-dev icu-dev $PHPIZE_DEPS \
-#    # Install pdo & pgsql
+    # Install pdo & pgsql
     && docker-php-ext-install pdo pgsql pdo_pgsql \
     # Install intl
     && docker-php-ext-configure intl \
