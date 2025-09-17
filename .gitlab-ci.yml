@@ -54,7 +54,7 @@ start-prod:
     - eval $(ssh-agent -s); echo "$SSH_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh; chmod 700 ~/.ssh; ssh-keyscan -t ed25519 $SSH_HOST >> ~/.ssh/known_hosts
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    - docker stack deploy -c .docker/docker-compose-liodie.yaml ${STACK_NAME}
+    - docker stack deploy --with-registry-auth -c .docker/docker-compose-liodie.yaml ${STACK_NAME}
   environment:
     name: production
     url: https://isps.liodie.fr
