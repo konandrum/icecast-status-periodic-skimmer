@@ -28,7 +28,7 @@ services:
       traefik: ~
 
   php:
-    image: gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/php-fpm:prod-alpine
+    image: gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/php-fpm:latest-alpine-arm64
     configs:
       - source: php_conf
         target: /usr/local/etc/php/php.ini
@@ -43,7 +43,7 @@ services:
       db: ~
 
   cron:
-    image: gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/cron:prod-alpine
+    image: gitlab-registry.idci-consulting.fr/liodie/icecast-status-periodic-skimmer/cron:latest-alpine-arm64
     configs:
       - source: php_conf
         target: /usr/local/etc/php/php.ini
