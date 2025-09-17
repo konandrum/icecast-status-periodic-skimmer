@@ -12,50 +12,45 @@ variables:
   FPM_RELEASE_IMAGE: ${CI_REGISTRY_IMAGE}/php-fpm
   CRON_RELEASE_IMAGE: ${CI_REGISTRY_IMAGE}/cron
 
-build-docker-image:
+build-docker-image-amd64:
   stage: build
-  timeout: 5h
-  variables:
-    RUNNER_SCRIPT_TIMEOUT: 4h
   script:
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    #- docker buildx build --cache-from ${FPM_RELEASE_IMAGE}:latest --target prod --build-arg APP_VERSION=${CI_COMMIT_TAG:-test} -t ${FPM_RELEASE_IMAGE}:latest -t ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test} ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
-    #- docker buildx build --cache-from ${CRON_RELEASE_IMAGE}:latest --target cron --build-arg APP_VERSION=${CI_COMMIT_TAG::-test} -t ${CRON_RELEASE_IMAGE}:latest -t ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test} ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
-    - docker buildx create --name armbuilder
-    - docker buildx use armbuilder
-    - docker buildx inspect --bootstrap
-    - docker buildx build --platform=linux/amd64,linux/arm64/v8 --target prod --build-arg APP_VERSION=${CI_COMMIT_TAG:-test} -t ${FPM_RELEASE_IMAGE}:latest -t ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test} ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
-    - docker buildx build --platform=linux/amd64,linux/arm64/v8 --target cron --build-arg APP_VERSION=${CI_COMMIT_TAG::-test} -t ${CRON_RELEASE_IMAGE}:latest -t ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test} ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
-    - docker push ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}
-    - docker push ${FPM_RELEASE_IMAGE}:latest
-    - docker push ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}
-    - docker push ${CRON_RELEASE_IMAGE}:latest
+    - docker build --cache-from ${FPM_RELEASE_IMAGE}:latest --target prod-alpine --build-arg APP_VERSION=${CI_COMMIT_TAG:-test} -t ${FPM_RELEASE_IMAGE}:latest-alpine -t ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}-alpine ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
+    - docker build --cache-from ${CRON_RELEASE_IMAGE}:latest --target cron-alpine --build-arg APP_VERSION=${CI_COMMIT_TAG::-test} -t ${CRON_RELEASE_IMAGE}:latest-alpine -t ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}-alpine ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
+    - docker push ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}-alpine
+    - docker push ${FPM_RELEASE_IMAGE}:latest-alpine
+    - docker push ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}-alpine
+    - docker push ${CRON_RELEASE_IMAGE}:latest-alpine
   when: manual
 #  only:
 #    - tags
 
+build-docker-image-arm64:
+  stage: build
+  variables:
+    DOCKER_HOST: ${SSH_USER}@${SSH_HOST}
+  script:
+    - eval $(ssh-agent -s); echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh; chmod 700 ~/.ssh; ssh-keyscan -t ed25519 $SSH_HOST >> ~/.ssh/known_hosts
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+    - docker build --cache-from ${FPM_RELEASE_IMAGE}:latest --target prod-alpine --build-arg APP_VERSION=${CI_COMMIT_TAG:-test} -t ${FPM_RELEASE_IMAGE}:latest-alpine -t ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}-alpine ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
+    - docker build --cache-from ${CRON_RELEASE_IMAGE}:latest --target cron-alpine --build-arg APP_VERSION=${CI_COMMIT_TAG::-test} -t ${CRON_RELEASE_IMAGE}:latest-alpine -t ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}-alpine ${CI_PROJECT_DIR} -f .docker/php/Dockerfile
+    - docker push ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}-alpine
+    - docker push ${FPM_RELEASE_IMAGE}:latest-alpine
+    - docker push ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG:-test}-alpine
+    - docker push ${CRON_RELEASE_IMAGE}:latest-alpine
+  when: manual
+
 start-prod:
   stage: start
   variables:
-    SSH_HOST: ${SSH_HOST}
-    SSH_USER: ${SSH_USER}
-    SSH_PASSWORD: ${SSH_PASSWORD}
-  image: debian:stable
-  before_script:
-    - apt update -qq
-    - apt install -y -qq ssh
-    - apt install -y -qq rsync
-    - apt install -y -qq sshpass
-    - mkdir -p ~/.ssh
-    - echo 'StrictHostKeyChecking no' >> ~/.ssh/config
-    - echo 'HostKeyAlgorithms=+ssh-rsa' >> ~/.ssh/config
-    - export SSHPASS=$SSH_PASSWORD
+    DOCKER_HOST: ${SSH_USER}@${SSH_HOST}
   script:
-    - sshpass -e rsync --exclude={'.git/','.gitlab-ci.yml'} -avz ${CI_PROJECT_DIR}/.docker/ ${SSH_USER}@${SSH_HOST}:/srv/docker/isps-docker-stack/
-    - sshpass -e ssh -t ${SSH_USER}@${SSH_HOST} "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}"
-    - sshpass -e ssh -t ${SSH_USER}@${SSH_HOST} "docker image pull ${FPM_RELEASE_IMAGE}:latest"
-    - sshpass -e ssh -t ${SSH_USER}@${SSH_HOST} "docker image pull ${CRON_RELEASE_IMAGE}:latest"
-    - sshpass -e ssh -t ${SSH_USER}@${SSH_HOST} "docker stack deploy -c /srv/docker/isps-docker-stack/docker-compose-liodie.yaml ${STACK_NAME}"
+    - eval $(ssh-agent -s); echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh; chmod 700 ~/.ssh; ssh-keyscan -t ed25519 $SSH_HOST >> ~/.ssh/known_hosts
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
+    - docker stack deploy -c .docker/docker-compose-liodie.yaml ${STACK_NAME}
   environment:
     name: production
     url: https://isps.liodie.fr
@@ -66,14 +61,13 @@ start-prod:
 deploy-to-prod:
   stage: deploy
   variables:
-    SSH_HOST: ${SSH_HOST}
-    SSH_USER: ${SSH_USER}
-    SSH_PASSWORD: ${SSH_PASSWORD}
-  image: docker:latest
+    DOCKER_HOST: ${SSH_USER}@${SSH_HOST}
   script:
+    - eval $(ssh-agent -s); echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh; chmod 700 ~/.ssh; ssh-keyscan -t ed25519 $SSH_HOST >> ~/.ssh/known_hosts
     - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}
-    - docker service update --with-registry-auth ${STACK_NAME}_php --update-monitor 10ms --image ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG}
-    - docker service update --with-registry-auth ${STACK_NAME}_cron --update-monitor 10ms --image ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG}
+    - docker service update --with-registry-auth ${STACK_NAME}_php --update-monitor 10ms --image ${FPM_RELEASE_IMAGE}:${CI_COMMIT_TAG}-alpine
+    - docker service update --with-registry-auth ${STACK_NAME}_cron --update-monitor 10ms --image ${CRON_RELEASE_IMAGE}:${CI_COMMIT_TAG}-alpine
   environment:
     name: production
     url: https://isps.liodie.fr
