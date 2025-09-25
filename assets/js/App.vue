@@ -34,7 +34,7 @@ export default {
     },
     methods: {
         refreshAudioStreams(source) {
-            fetch("/api/v1/broadcasted_audio_stream?source=" + source, {"method": "GET"})
+            fetch(this.options.host + "/api/v1/broadcasted_audio_stream?source=" + source, {"method": "GET"})
                 .then(response => response.json())
                 .then(function (result) {
                     this.liveStream[source] = result[0];
@@ -51,7 +51,7 @@ export default {
         },
 
         searchAudioStreams(source) {
-            fetch("/api/v1/broadcasted_audio_stream?source=" + source + "&at=" + encodeURIComponent(moment(String(this.searchDate)).format('YYYY-MM-DDTHH:mm:ssZ')), {"method": "GET"})
+            fetch(this.options.host + "/api/v1/broadcasted_audio_stream?source=" + source + "&at=" + encodeURIComponent(moment(String(this.searchDate)).format('YYYY-MM-DDTHH:mm:ssZ')), {"method": "GET"})
                 .then(response => response.json())
                 .then(result => this.audioStreams[source] = result)
             ;
