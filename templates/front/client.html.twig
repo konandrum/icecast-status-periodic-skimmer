@@ -4,7 +4,7 @@
 <!--
 <div
     id="isps-reader"
-    data-host="http://isps.docker"
+    data-host="{{ app.request.getSchemeAndHttpHost() }}"
     data-sources="rdwa_die|107.5FM|http://live.aurafm.org:80/R-Dwa,rdwa_luc|101.7FM|http://live.aurafm.org:80/R-Dwa-LUC"
 >
 //-->
