@@ -12,3 +12,6 @@ app:
         declic_radio:
             host: live.aurafm.org
             server_name: 'DeclicRADIO'
+        radio_saintfe:
+            host: live.aurafm.org
+            server_name: 'Radio Saint Ferreol'
