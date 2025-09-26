@@ -27,7 +27,13 @@ class IcecastShowStatusesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         foreach ($this->icecastConfiguredSourcesFactory->buildSources() as $icecastSource) {
-            $audioStreamItem = $icecastSource->getAudioStreamItem();
+            try {
+                $audioStreamItem = $icecastSource->getAudioStreamItem();
+            } catch (\Exception $e) {
+                $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+
+                continue;
+            }
 
             $output->writeln(sprintf('<info>[%s | %s] "%s"</info>',
                 $audioStreamItem->getObservedAt()->format('Y-m-d H:i:s'),

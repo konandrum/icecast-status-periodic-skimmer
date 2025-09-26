@@ -13,6 +13,10 @@ abstract class AbstractAudioStreamItemFactory
 
     public static function createFromArray(array $data): AudioStreamItem
     {
+        if (!isset($data['title'])) {
+            throw new \Exception(sprintf('Missing "title" information in "%s" data source', $data['source']));
+        }
+
         return (new AudioStreamItem())
             ->setSource($data['source'])
             ->setServerName($data['server_name'])
