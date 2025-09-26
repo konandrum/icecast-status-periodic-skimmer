@@ -66,11 +66,21 @@ export default {
         playPause(event, source) {
             let player = event.target;
 
+            source.sound.once('load', function() {
+                player.classList.add('active');
+            });
+
             if (!source.sound.playing()) {
                 source.sound.play();
-                player.classList.add('active');
+
+                if ('loaded' === source.sound.state()) {
+                    player.classList.add('active');
+                } else {
+                    player.classList.add('load');
+                }
             } else {
                 source.sound.pause();
+                player.classList.remove('load');
                 player.classList.remove('active');
             }
         }
@@ -92,9 +102,7 @@ export default {
             </div>
         </span>
 
-        <label class="isps_show_advanced_label" v-bind:for="'isps_show_advanced_'+source.name" title="Rechercher le titre d'une musique diffusée">
-            <i>Rechercher le titre d'une musique diffusée sur {{ source.name }}</i>
-        </label>
+        <label class="isps_show_advanced_label" v-bind:for="'isps_show_advanced_'+source.name" title="Rechercher le titre d'une musique diffusée"></label>
         <input class="isps_show_advanced_input" type="checkbox" v-bind:id="'isps_show_advanced_'+source.name" />
         <div class="isps_advanced_container">
             <form>
