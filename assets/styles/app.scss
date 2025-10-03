@@ -12,8 +12,6 @@ $text-color: #000;
     }
 }
 
-//@media (max-width: 320px) { ... }
-
 #isps-reader {
     .isps_widget {
         align-items: center;
@@ -24,11 +22,15 @@ $text-color: #000;
         display: flex;
         flex-direction: row;
         font-family: 'Roboto Condensed', sans-serif;
-        gap: 0.5rem;
+        gap: 5px;
         margin: 1rem;
         padding: 0.8rem 0.5rem;
         position: relative;
         width: 100%;
+
+        @media (max-width: 640px) {
+            margin: 0.5rem;
+        }
 
         > * {
             height: 3rem;
@@ -53,7 +55,7 @@ $text-color: #000;
             text-indent: -9999px;
             width: 3rem;
 
-            @media (max-width: 320px) {
+            @media (max-width: 640px) {
                 height: 2rem;
                 margin: 0;
                 width: 2rem;
@@ -89,9 +91,10 @@ $text-color: #000;
             text-decoration: none;
             width: 4rem;
 
-            @media (max-width: 320px) {
+            @media (max-width: 640px) {
+                font-size: 14px !important;
                 margin: 0;
-                font-size: 13px!important;
+                width: 3rem;
             }
         }
 
@@ -99,13 +102,12 @@ $text-color: #000;
             align-items: center;
             display: flex;
             flex-direction: row;
-            gap: 0.5rem;
+            gap: 5px;
             padding: 0 0 0 1.5rem;
             position: relative;
 
-            @media (max-width: 320px) {
-                margin: 0 0 0 0.5rem;
-                padding: 0;
+            @media (max-width: 640px) {
+                padding: 0 0 0 15px;
             }
 
             i {
@@ -117,6 +119,10 @@ $text-color: #000;
                 line-height: 3rem;
                 text-transform: uppercase;
 
+                @media (max-width: 640px) {
+                    font-size: 12px;
+                }
+
                 &::before {
                     aspect-ratio: 1;
                     background-color: $text-color;
@@ -127,6 +133,11 @@ $text-color: #000;
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);
+
+                    @media (max-width: 640px) {
+                        height: 6px;
+                        left: 6px;
+                    }
                 }
             }
 
@@ -142,9 +153,9 @@ $text-color: #000;
                 overflow: hidden;
                 padding: 0.5rem 0;
 
-                @media (max-width: 320px) {
+                @media (max-width: 640px) {
                     width: 10rem;
-                    padding: 0.25rem 0;
+                    padding: 2px;
                 }
 
                 p {
@@ -157,6 +168,10 @@ $text-color: #000;
                     padding-left: 100%;
                     text-shadow: 1px 1px 1px #DDD;
                     white-space: nowrap;
+
+                    @media (max-width: 640px) {
+                        font-size: 12px !important;
+                    }
                 }
             }
 
@@ -186,6 +201,10 @@ $text-color: #000;
             z-index: 1000;
             transition:
                 opacity 2s;
+
+            @media (max-width: 640px) {
+                top: 3.7rem;
+            }
 
             form {
                 text-align: center;
@@ -222,6 +241,10 @@ $text-color: #000;
 
                     td {
                         padding: 0.5rem;
+
+                        @media (max-width: 640px) {
+                            font-size: 12px !important;
+                        }
                     }
                 }
             }
@@ -243,6 +266,10 @@ $text-color: #000;
             position: absolute;
             right: 1rem;
             width: 3rem;
+
+            @media (max-width: 640px) {
+                width: 2rem;
+            }
 
             &:hover {
                 cursor: pointer;
