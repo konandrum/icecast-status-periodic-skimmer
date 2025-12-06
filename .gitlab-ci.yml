@@ -27,6 +27,7 @@ build-docker-image-amd64:
     - docker push ${CRON_RELEASE_IMAGE}:latest-${IMAGE_TAG_SUFFIX}
   only:
     - tags
+  when: manual # To prevent this stage due to Gitlab version bug (2025-12-06) => To fix with Mirsal
 
 build-docker-image-arm64:
   stage: build
