@@ -47,6 +47,18 @@
             "config/packages/eight_points_guzzle.yaml"
         ]
     },
+    "liip/monitor-bundle": {
+        "version": "2.24",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "2.6",
+            "ref": "02c7cd93304dead890f9042fc2670dd9b0e0c091"
+        },
+        "files": [
+            "config/packages/monitor.yaml"
+        ]
+    },
     "symfony/console": {
         "version": "7.2",
         "recipe": {
