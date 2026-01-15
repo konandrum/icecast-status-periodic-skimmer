@@ -43,9 +43,26 @@ To stop the project docker stack :
 $ make stop
 ```
 
+## First installation
+
+Set project right permissions:
+```sh
+$ sudo chown $USER:www-data -R . && chmod 775 -R .
+```
+
+Install vendors:
+```sh
+$ make composer-install
+```
+
+Run database migration:
+```sh
+$ make console cmd="doctrine:migration:migrate"
+```
+
 ## Build assets
 
-To build the assets, run the following commands :
+To build project assets, run the following commands :
 ```sh
 $ make yarn
 $ make encore
