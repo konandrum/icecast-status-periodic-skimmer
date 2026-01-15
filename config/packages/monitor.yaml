@@ -1,0 +1,33 @@
+liip_monitor:
+    # enabling the controller requires that `assets` are enabled in the framework bundle
+    enable_controller: true
+    default_group: app
+    checks:
+        groups:
+            app:
+                php_version:
+                    '8.4': '>='
+                doctrine_dbal:
+                    - default
+                doctrine_migrations:
+                    migration_app:
+                        connection: default
+                pdo_connections:
+                    postgres_app:
+                        dsn: 'pgsql:host=%env(resolve:DATABASE_HOST)%;dbname=%env(resolve:DATABASE_NAME)%'
+                        username: '%env(resolve:DATABASE_USER)%'
+                        password: '%env(resolve:DATABASE_PASSWORD)%'
+                        timeout: 1
+            ws:
+               guzzle_http_service:
+                    icecast:
+                       method: GET
+                       url: '%env(resolve:ICECAST_HEALTH_CHECK_URL)%'
+                       headers: []
+                       body: null
+                       status_code: 200
+                       options:
+                           connect_timeout: 1
+                           read_timeout: 3
+                           timeout: 5
+                           verify: false

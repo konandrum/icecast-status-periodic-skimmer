@@ -39,9 +39,14 @@ services:
     volumes:
       - public_build:/var/www/app/public/build
     environment:
-      - APP_ENV=prod
-      - APP_SECRET=uRee4iehie4ahtei2eengequ
-      - DATABASE_URL=pgsql://root:toor@postgres:5432/isps?serverVersion=17&charset=utf8
+      APP_ENV: prod
+      APP_SECRET: ${APP_SECRET:-uRee4iehie4ahtei2eengequ}
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${POSTGRES_DB:-isps}
+      DATABASE_USER: ${POSTGRES_USER:-root}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-toor}
+      DATABASE_VERSION: ${POSTGRES_VERSION:-17}
     deploy:
       endpoint_mode: vip
       placement:
@@ -57,9 +62,14 @@ services:
       - source: php_conf
         target: /usr/local/etc/php/php.ini
     environment:
-      - APP_ENV=prod
-      - APP_SECRET=uRee4iehie4ahtei2eengequ
-      - DATABASE_URL=pgsql://root:toor@postgres:5432/isps?serverVersion=17&charset=utf8
+      APP_ENV: prod
+      APP_SECRET: ${APP_SECRET:-uRee4iehie4ahtei2eengequ}
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${POSTGRES_DB:-isps}
+      DATABASE_USER: ${POSTGRES_USER:-root}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-toor}
+      DATABASE_VERSION: ${POSTGRES_VERSION:-17}
     deploy:
       endpoint_mode: dnsrr
       placement:
