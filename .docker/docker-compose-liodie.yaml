@@ -27,6 +27,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - public_build:/var/www/app/public/build:ro
+      - public_bundles:/var/www/app/public/bundles:ro
     networks:
       fastcgi: ~
       reverse-proxy: ~
@@ -38,6 +39,7 @@ services:
         target: /usr/local/etc/php/php.ini
     volumes:
       - public_build:/var/www/app/public/build
+      - public_bundles:/var/www/app/public/bundles
     environment:
       APP_ENV: prod
       APP_SECRET: ${APP_SECRET:-uRee4iehie4ahtei2eengequ}
@@ -107,6 +109,7 @@ configs:
 
 volumes:
   public_build: ~
+  public_bundles: ~
   postgres_data: ~
 
 networks:
