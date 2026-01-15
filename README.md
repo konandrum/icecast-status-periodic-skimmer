@@ -21,7 +21,7 @@ git clone git@gitlab.idci-consulting.fr:liodie/icecast-status-periodic-skimmer.g
 Add the following DNS entries in your host file:
 ```
 # Icecast status periodic skimmer
-127.0.0.1       isps.docker
+127.0.0.1       isps.docker adminer.isps.docker
 ```
 
 If you need to rebuild docker app images, run the following command :
