@@ -12,7 +12,7 @@ services:
         - traefik.docker.network=traefik_reverse_proxy
         - traefik.docker.lbswarm=true
         - traefik.http.services.isps-nginx.loadbalancer.server.port=80
-        - traefik.http.routers.isps-nginx.entryPoints=web
+        - traefik.http.routers.isps-nginx.entrypoints=web
         - traefik.http.routers.isps-nginx.rule=Host(`isps.docker`)
         - traefik.http.routers.isps-nginx-https.entrypoints=websecure
         - traefik.http.routers.isps-nginx-https.rule=Host(`isps.docker`)
@@ -82,7 +82,7 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik_reverse_proxy
         - traefik.http.services.isps-adminer.loadbalancer.server.port=8080
-        - traefik.http.routers.isps-adminer.entryPoints=web
+        - traefik.http.routers.isps-adminer.entrypoints=web
         - traefik.http.routers.isps-adminer.rule=Host(`adminer.isps.docker`)
         - traefik.http.routers.isps-adminer-https.entrypoints=websecure
         - traefik.http.routers.isps-adminer-https.rule=Host(`adminer.isps.docker`)
