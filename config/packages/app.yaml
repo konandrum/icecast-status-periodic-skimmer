@@ -9,9 +9,12 @@ app:
         radio_blv:
             host: live.aurafm.org
             server_name: 'RadioBLV'
-        declic_radio:
+        radio_news_fm:
             host: live.aurafm.org
-            server_name: 'DeclicRADIO'
+            server_name: "Radio New's FM"
+#        declic_radio:
+#            host: live.aurafm.org
+#            server_name: 'DeclicRADIO'
 #        radio_saintfe:
 #            host: live.aurafm.org
 #            server_name: 'Radio Saint Ferreol'
