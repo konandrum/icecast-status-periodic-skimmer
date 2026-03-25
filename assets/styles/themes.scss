@@ -31,3 +31,7 @@
 #isps-reader .radio_blv.isps_widget {
     @include theme($base-color: #4b8ad3, $text-color: #FFF);
 }
+
+#isps-reader .radio_news_fm.isps_widget {
+    @include theme($base-color: #9b17a7, $text-color: #000000);
+}
