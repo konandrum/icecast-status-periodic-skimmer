@@ -15,6 +15,7 @@ services:
         - traefik.http.routers.isps-nginx.rule=Host(`isps.liodie.fr`)
         - traefik.http.routers.isps-nginx-https.entrypoints=websecure
         - traefik.http.routers.isps-nginx-https.rule=Host(`isps.liodie.fr`)
+        - traefik.http.routers.isps-nginx-https.tls=true
       placement:
         constraints:
           - node.labels.isps == active

@@ -29,6 +29,8 @@ services:
       - mode: host
         published: 8080
         target: 8080
+    deploy:
+      endpoint_mode: dnsrr
     networks:
       traefik_reverse_proxy: ~
 
